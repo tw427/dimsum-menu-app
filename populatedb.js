@@ -26,8 +26,8 @@ async function main() {
   console.log("Debug: Should be connected?");
 
   // Populate / Create items for DB
-  await createDishes();
   await createCategories();
+  await createDishes();
 
   console.log("Debug: Closing mongoose");
   mongoose.connection.close();
@@ -73,49 +73,49 @@ async function createDishes() {
       0,
       "BBQ Pork Buns",
       "Honey-glazed oven baked buns with red sweet and savory pork filling",
-      categories[0],
+      [categories[0]],
       5.99
     ),
     dishCreate(
       1,
       "Sticky Rice",
       "Speckled with bits of chicken, sausage, and mushrooms, this is pretty much everything you love about fried rice, minus the grease, plus gift wrap.",
-      categories[0],
+      [categories[0]],
       7.99
     ),
     dishCreate(
       2,
       "Soup Dumplings (XLB)",
       "Thinly wrapped dumpling pouches filled with flavor packed soup and pork",
-      categories[0],
+      [categories[0]],
       6.99
     ),
     dishCreate(
       3,
       "Egg Tart",
       "Miniature pie shaped puff pastries filled with a sweet, soft, bouncy, egg custard center",
-      categories[2],
+      [categories[2]],
       2.99
     ),
     dishCreate(
       4,
       "Melting Egg Yolk Bun",
       "Baked bun topped with a crumbly sweet egg shell on top, filled with a melty lava like flow of sweet egg custard liquid gold",
-      categories[2],
+      [categories[2]],
       4.99
     ),
     dishCreate(
       5,
       "Chicken Feet",
       "Black-bean sauce with a complex flavor profile, this Red Chicken Feet is sure to be a homerun for squeemish first timers",
-      categories[1],
+      [categories[1]],
       4.99
     ),
     dishCreate(
       6,
       "Deep Fried Shrimp Balls",
       "Breaded minced seasoned shrimp dipped and fried in our in-house batter with a sugar cane handle for a touch of sweetness",
-      categories[1],
+      [categories[1]],
       4.99
     ),
   ]);
