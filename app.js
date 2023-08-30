@@ -10,7 +10,7 @@ mongoose.set("strictQuery", false);
 const mongoDB =
   "mongodb+srv://bobacrypto2:lbhjJrcgtQXCOZAN@cluster0.vxwskmu.mongodb.net/dimsum-menu?retryWrites=true&w=majority";
 
-main.catch((err) => console.log(err));
+main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
 }
