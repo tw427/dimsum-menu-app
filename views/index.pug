@@ -2,4 +2,12 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to #[em Dimsum Menu], a very basic Express website developed as the project " Inventory Application " via The Odin Project.
+
+  h1 Dynamic content 
+
+  p Our menu features the following record counts of: 
+
+  ul 
+    li #[strong Food Categories: ] !{category_count}
+    li #[strong Individual Dishes: ] !{dish_count}

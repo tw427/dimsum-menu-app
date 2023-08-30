@@ -1,8 +1,18 @@
 const Category = require("../models/category");
+const Dish = require("../models/dish");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Site Home Page");
+  const [numCategories, numDishes] = await Promise.all([
+    Category.countDocuments({}).exec(),
+    Dish.countDocuments({}).exec(),
+  ]);
+
+  res.render("index", {
+    title: "Dimsum Menu App",
+    category_count: numCategories,
+    dish_count: numDishes,
+  });
 });
 
 // Display list of categories
