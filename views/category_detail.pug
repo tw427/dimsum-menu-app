@@ -1,0 +1,17 @@
+extends layout 
+
+block content 
+  h1 Category: #{category.name}
+
+  div(style="margin-left:20px;margin-top:20px")
+
+    h4 Dishes
+
+    dl 
+      each dish in category_dishes
+        dt 
+          a(href=dish.url) #{dish.name}
+        dd #{dish.description}
+
+      else 
+        p This category has no dishes.

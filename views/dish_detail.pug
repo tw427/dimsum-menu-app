@@ -1,0 +1,9 @@
+extends layout 
+
+block content 
+  h1 Dish name: #{name}
+
+  p #[strong Description: ] #{desc}
+  p #[strong Price: ] #{price}
+  p #[strong Dish category: ]
+    a(href=category.url) #{category.name}

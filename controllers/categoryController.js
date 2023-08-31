@@ -26,7 +26,22 @@ exports.category_list = asyncHandler(async (req, res, next) => {
 });
 // Details for specific category
 exports.category_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: category detail ${req.params.id}`);
+  const [category, dishInCategory] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Dish.find({ category: req.params.id }, "name price").exec(),
+  ]);
+
+  if (category === null) {
+    const err = new Error("Dish not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("category_detail", {
+    title: "Category detail",
+    category: category,
+    category_dishes: dishInCategory,
+  });
 });
 // Display category create form on GET
 exports.category_create_get = asyncHandler(async (req, res, next) => {

@@ -1,4 +1,5 @@
 const Dish = require("../models/dish");
+// const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
 
 // Display list of Dishes
@@ -9,7 +10,20 @@ exports.dish_list = asyncHandler(async (req, res, next) => {
 });
 // Details for specific Dish
 exports.dish_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Dish detail ${req.params.id}`);
+  const dish = await Dish.findById(req.params.id).populate("category").exec();
+
+  if (dish === null) {
+    const err = new Error("Dish not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("dish_detail", {
+    name: dish.name,
+    desc: dish.description,
+    price: dish.price,
+    category: dish.category,
+  });
 });
 
 // Display Dish create form on GET
