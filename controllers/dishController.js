@@ -3,7 +3,9 @@ const asyncHandler = require("express-async-handler");
 
 // Display list of Dishes
 exports.dish_list = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Dish list");
+  const allDishes = await Dish.find({}, "name price").sort({ name: 1 }).exec();
+
+  res.render("dish_list", { title: "Dish List", dish_list: allDishes });
 });
 // Details for specific Dish
 exports.dish_detail = asyncHandler(async (req, res, next) => {
