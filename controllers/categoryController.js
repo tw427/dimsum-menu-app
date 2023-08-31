@@ -1,5 +1,6 @@
 const Category = require("../models/category");
 const Dish = require("../models/dish");
+const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {

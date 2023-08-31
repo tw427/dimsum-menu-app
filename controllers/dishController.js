@@ -1,5 +1,6 @@
 const Dish = require("../models/dish");
-// const Category = require("../models/category");
+const Category = require("../models/category");
+const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
 // Display list of Dishes
@@ -28,12 +29,57 @@ exports.dish_detail = asyncHandler(async (req, res, next) => {
 
 // Display Dish create form on GET
 exports.dish_create_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Dish create GET");
+  const allCategories = await Category.find().exec();
+
+  res.render("dish_form", {
+    title: "Create Dish",
+    categories: allCategories,
+  });
 });
 // Handle Dish create on POST
-exports.dish_create_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Dish create POST");
-});
+exports.dish_create_post = [
+  // Validate and sanitize fields.
+  body("name", "Name must not be empty").trim().isLength({ min: 2 }).escape(),
+  body("category", "Category must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description", "Description must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("price", "Price must not be empty").trim().isLength({ min: 1 }).escape(),
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const dish = new Dish({
+      name: req.body.name,
+      category: req.body.category,
+      description: req.body.description,
+      price: req.body.price,
+    });
+
+    if (!errors.isEmpty()) {
+      const allCategories = await Category.find().exec();
+
+      for (const category of allCategories) {
+        if (dish.category.includes(category._id)) {
+          category.checked = "true";
+        }
+      }
+
+      res.render("dish_form", {
+        title: "Create Dish",
+        categories: allCategories,
+        dish: dish,
+        errors: errors.array(),
+      });
+    } else {
+      await dish.save();
+      res.redirect(dish.url);
+    }
+  }),
+];
 // Display Dish delete form on GET
 exports.dish_delete_get = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: Dish delete GET");
