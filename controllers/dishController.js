@@ -20,6 +20,7 @@ exports.dish_detail = asyncHandler(async (req, res, next) => {
   }
 
   res.render("dish_detail", {
+    dish: dish,
     name: dish.name,
     desc: dish.description,
     price: dish.price,
@@ -82,11 +83,23 @@ exports.dish_create_post = [
 ];
 // Display Dish delete form on GET
 exports.dish_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Dish delete GET");
+  const dish = await Dish.findById(req.params.id).exec();
+
+  if (dish === null) {
+    res.redirect("/menu/dishes");
+  }
+
+  res.render("dish_delete", {
+    title: "Delete Dish",
+    dish: dish,
+  });
 });
 // Handle Dish delete on POST
 exports.dish_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Dish delete POST");
+  const dish = await Dish.findById(req.params.id).exec();
+
+  await Dish.findByIdAndRemove(req.body.dishid);
+  res.redirect("/menu/dishes");
 });
 // Display Dish update form on GET
 exports.dish_update_get = asyncHandler(async (req, res, next) => {

@@ -1,0 +1,15 @@
+extends layout 
+
+block content 
+
+  h1 #{title}: #{dish.name}
+  p= dish.description
+  p= dish.price
+
+  p Do you really want to delete this Dish?
+
+    form(method="POST" action="")
+      div.form-group
+        input#dishid.form-control(type="hidden", name="dishid", required="true", value=dish._id)
+
+      button.btn.btn-primary(type="submit") Delete

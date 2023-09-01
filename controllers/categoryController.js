@@ -79,11 +79,39 @@ exports.category_create_post = [
 ];
 // Display category delete form on GET
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: category delete GET");
+  const [category, allCategoryDishes] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Dish.find({ category: req.params.id }).exec(),
+  ]);
+
+  if (category === null) {
+    res.redirect("/menu/categories");
+  }
+
+  res.render("category_delete", {
+    title: "Delete category",
+    category: category,
+    category_dishes: allCategoryDishes,
+  });
 });
 // Handle category delete on POST
 exports.category_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: category delete POST");
+  const [category, allCategoryDishes] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Dish.find({ category: req.params.id }).exec(),
+  ]);
+
+  if (allCategoryDishes.length > 0) {
+    res.render("category_delete", {
+      title: "Delete category",
+      category: category,
+      category_dishes: allCategoryDishes,
+    });
+    return;
+  } else {
+    await Category.findByIdAndRemove(req.body.categoryid);
+    res.redirect("/menu/categories");
+  }
 });
 // Display category update form on GET
 exports.category_update_get = asyncHandler(async (req, res, next) => {
