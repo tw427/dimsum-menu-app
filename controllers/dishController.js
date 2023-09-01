@@ -103,9 +103,61 @@ exports.dish_delete_post = asyncHandler(async (req, res, next) => {
 });
 // Display Dish update form on GET
 exports.dish_update_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Dish update GET");
+  const [dish, allCategories] = await Promise.all([
+    Dish.findById(req.params.id).exec(),
+    Category.find().exec(),
+  ]);
+
+  if (dish === null) {
+    const err = new Error("Dish not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("dish_form", {
+    title: "Update Dish",
+    categories: allCategories,
+    dish: dish,
+  });
 });
 // Handles Dish update POST
-exports.dish_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Dish update POST");
-});
+exports.dish_update_post = [
+  //Validate and Sanitize fields
+  body("name", "Name must not be empty").trim().isLength({ min: 2 }).escape(),
+  body("category", "Category must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description", "Description must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("price", "Price must not be empty").trim().isLength({ min: 1 }).escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const dish = new Dish({
+      name: req.body.name,
+      category: req.body.category,
+      description: req.body.description,
+      price: req.body.price,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      const allCategories = await Category.find().exec();
+
+      res.render("dish_form", {
+        title: "Update Dish",
+        categories: allCategories,
+        dish: dish,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      const updatedDish = await Dish.findByIdAndUpdate(req.params.id, dish, {});
+      res.redirect(updatedDish.url);
+    }
+  }),
+];
