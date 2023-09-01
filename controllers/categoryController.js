@@ -46,12 +46,37 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
 });
 // Display category create form on GET
 exports.category_create_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: category create GET");
+  res.render("category_form", { title: "Create Category" });
 });
 // Handle category create on POST
-exports.category_create_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: category create POST");
-});
+exports.category_create_post = [
+  // Validate and sanitize fields
+  body("category")
+    .trim()
+    .isLength({ min: 3 })
+    .escape()
+    .withMessage("Category must be specified"),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const category = new Category({
+      name: req.body.category,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_form", {
+        title: "Create Category",
+        category: category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      await category.save();
+      res.redirect(category.url);
+    }
+  }),
+];
 // Display category delete form on GET
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
   res.send("NOT IMPLEMENTED: category delete GET");

@@ -6,7 +6,6 @@ const CategorySchema = new Schema({
   name: {
     type: String,
     required: true,
-    enum: ["Entree", "Appetizer", "Desert"],
   },
 });
 
